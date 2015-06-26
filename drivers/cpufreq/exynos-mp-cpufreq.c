@@ -1418,7 +1418,6 @@ inline ssize_t store_core_freq(const char *buf, size_t count,
 	return count;
 }
 
-
 inline ssize_t set_boot_low_freq(const char *buf, size_t count)
 {
 	int input;
@@ -1443,7 +1442,7 @@ inline ssize_t set_boot_low_freq(const char *buf, size_t count)
 		pm_qos_update_request(&boot_max_qos[CL_ONE],
 					PM_QOS_DEFAULT_VALUE);
 	}
-
+}
 
 static size_t get_freq_table_size(struct cpufreq_frequency_table *freq_table)
 {
@@ -1533,7 +1532,6 @@ static ssize_t store_volt_table(struct kobject *kobj, struct attribute *attr,
 
 	mutex_unlock(&cpufreq_lock);
 
-
 	return count;
 }
 
@@ -1620,7 +1618,7 @@ static ssize_t store_boot_low_freq(struct kobject *kobj, struct attribute *attr,
 					const char *buf, size_t count)
 {
 	return set_boot_low_freq(buf, count);
-
+}
 static ssize_t show_cluster0_volt_table(struct kobject *kobj,
 				struct attribute *attr, char *buf)
 {
@@ -1655,6 +1653,7 @@ static struct attribute *mp_attributes[] = {
 	&cluster0_max_freq.attr,
 	&boot_low_freq.attr,
 	&cluster0_volt_table.attr,
+
 	NULL
 };
 
