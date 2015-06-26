@@ -1417,7 +1417,7 @@ inline ssize_t store_core_freq(const char *buf, size_t count,
 	return count;
 }
 
-<<<<<<< HEAD
+
 inline ssize_t set_boot_low_freq(const char *buf, size_t count)
 {
 	int input;
@@ -1443,7 +1443,7 @@ inline ssize_t set_boot_low_freq(const char *buf, size_t count)
 					PM_QOS_DEFAULT_VALUE);
 	}
 
-=======
+
 static size_t get_freq_table_size(struct cpufreq_frequency_table *freq_table)
 {
 	size_t tbl_sz = 0;
@@ -1530,7 +1530,7 @@ static ssize_t store_volt_table(struct kobject *kobj, struct attribute *attr,
 
 	mutex_unlock(&cpufreq_lock);
 
->>>>>>> add669f... cpufreq: exynos: Add Exynos MP voltage control
+
 	return count;
 }
 
@@ -1612,12 +1612,12 @@ static ssize_t store_cluster0_max_freq(struct kobject *kobj, struct attribute *a
 	return store_core_freq(buf, count, CL_ZERO, true);
 }
 
-<<<<<<< HEAD
+
 static ssize_t store_boot_low_freq(struct kobject *kobj, struct attribute *attr,
 					const char *buf, size_t count)
 {
 	return set_boot_low_freq(buf, count);
-=======
+
 static ssize_t show_cluster0_volt_table(struct kobject *kobj,
 				struct attribute *attr, char *buf)
 {
@@ -1628,7 +1628,7 @@ static ssize_t store_cluster0_volt_table(struct kobject *kobj, struct attribute 
 					const char *buf, size_t count)
 {
 	return store_volt_table(kobj, attr, buf, count, CL_ZERO);
->>>>>>> add669f... cpufreq: exynos: Add Exynos MP voltage control
+
 }
 
 define_one_global_ro(cluster1_freq_table);
@@ -1638,11 +1638,9 @@ define_one_global_rw(cluster1_volt_table);
 define_one_global_ro(cluster0_freq_table);
 define_one_global_rw(cluster0_min_freq);
 define_one_global_rw(cluster0_max_freq);
-<<<<<<< HEAD
 define_one_global_rw(boot_low_freq);
-=======
 define_one_global_rw(cluster0_volt_table);
->>>>>>> add669f... cpufreq: exynos: Add Exynos MP voltage control
+
 
 static struct attribute *mp_attributes[] = {
 	&cluster1_freq_table.attr,
@@ -1652,11 +1650,8 @@ static struct attribute *mp_attributes[] = {
 	&cluster0_freq_table.attr,
 	&cluster0_min_freq.attr,
 	&cluster0_max_freq.attr,
-<<<<<<< HEAD
 	&boot_low_freq.attr,
-=======
 	&cluster0_volt_table.attr,
->>>>>>> add669f... cpufreq: exynos: Add Exynos MP voltage control
 	NULL
 };
 
