@@ -1,8 +1,8 @@
 #undef TRACE_SYSTEM
-#define TRACE_SYSTEM cpufreq_interactive
+#define TRACE_SYSTEM cpufreq_simplgov
 
-#if !defined(_TRACE_CPUFREQ_INTERACTIVE_H) || defined(TRACE_HEADER_MULTI_READ)
-#define _TRACE_CPUFREQ_INTERACTIVE_H
+#if !defined(_TRACE_CPUFREQ_simplgov_H) || defined(TRACE_HEADER_MULTI_READ)
+#define _TRACE_CPUFREQ_simplgov_H
 
 #include <linux/tracepoint.h>
 
@@ -28,32 +28,32 @@ DECLARE_EVENT_CLASS(set,
 	      __entry->actualfreq)
 );
 
-DEFINE_EVENT(set, cpufreq_interactive_setspeed,
+DEFINE_EVENT(set, cpufreq_simplgov_setspeed,
 	TP_PROTO(u32 cpu_id, unsigned long targfreq,
 	     unsigned long actualfreq),
 	TP_ARGS(cpu_id, targfreq, actualfreq)
 );
 
 #ifdef CONFIG_ARCH_EXYNOS
-DEFINE_EVENT(set, cpufreq_interactive_cpu_min_qos,
+DEFINE_EVENT(set, cpufreq_simplgov_cpu_min_qos,
 	TP_PROTO(u32 cpu_id, unsigned long targfreq,
 	     unsigned long actualfreq),
 	TP_ARGS(cpu_id, targfreq, actualfreq)
 );
 
-DEFINE_EVENT(set, cpufreq_interactive_cpu_max_qos,
+DEFINE_EVENT(set, cpufreq_simplgov_cpu_max_qos,
 	TP_PROTO(u32 cpu_id, unsigned long targfreq,
 	     unsigned long actualfreq),
 	TP_ARGS(cpu_id, targfreq, actualfreq)
 );
 #ifdef CONFIG_ARM_EXYNOS_MP_CPUFREQ
-DEFINE_EVENT(set, cpufreq_interactive_kfc_min_qos,
+DEFINE_EVENT(set, cpufreq_simplgov_kfc_min_qos,
 	TP_PROTO(u32 cpu_id, unsigned long targfreq,
 	     unsigned long actualfreq),
 	TP_ARGS(cpu_id, targfreq, actualfreq)
 );
 
-DEFINE_EVENT(set, cpufreq_interactive_kfc_max_qos,
+DEFINE_EVENT(set, cpufreq_simplgov_kfc_max_qos,
 	TP_PROTO(u32 cpu_id, unsigned long targfreq,
 	     unsigned long actualfreq),
 	TP_ARGS(cpu_id, targfreq, actualfreq)
@@ -88,21 +88,21 @@ DECLARE_EVENT_CLASS(loadeval,
 		      __entry->curactual, __entry->newtarg)
 );
 
-DEFINE_EVENT(loadeval, cpufreq_interactive_target,
+DEFINE_EVENT(loadeval, cpufreq_simplgov_target,
 	    TP_PROTO(unsigned long cpu_id, unsigned long load,
 		     unsigned long curtarg, unsigned long curactual,
 		     unsigned long newtarg),
 	    TP_ARGS(cpu_id, load, curtarg, curactual, newtarg)
 );
 
-DEFINE_EVENT(loadeval, cpufreq_interactive_already,
+DEFINE_EVENT(loadeval, cpufreq_simplgov_already,
 	    TP_PROTO(unsigned long cpu_id, unsigned long load,
 		     unsigned long curtarg, unsigned long curactual,
 		     unsigned long newtarg),
 	    TP_ARGS(cpu_id, load, curtarg, curactual, newtarg)
 );
 
-DEFINE_EVENT(loadeval, cpufreq_interactive_notyet,
+DEFINE_EVENT(loadeval, cpufreq_simplgov_notyet,
 	    TP_PROTO(unsigned long cpu_id, unsigned long load,
 		     unsigned long curtarg, unsigned long curactual,
 		     unsigned long newtarg),
@@ -139,14 +139,14 @@ DECLARE_EVENT_CLASS(modeeval,
 		      __entry->cpu_id, __entry->total_load, __entry->single_enter,
 		      __entry->multi_enter, __entry->single_exit, __entry->multi_exit, __entry->mode)
 );
-DEFINE_EVENT(modeeval, cpufreq_interactive_mode,
+DEFINE_EVENT(modeeval, cpufreq_simplgov_mode,
 	    TP_PROTO(unsigned long cpu_id, unsigned long total_load,
 		     unsigned long single_enter, unsigned long multi_enter,
 		     unsigned long single_exit, unsigned long multi_exit, unsigned long mode),
 	    TP_ARGS(cpu_id, total_load, single_enter, multi_enter, single_exit, multi_exit, mode)
 );
 #endif
-TRACE_EVENT(cpufreq_interactive_boost,
+TRACE_EVENT(cpufreq_simplgov_boost,
 	    TP_PROTO(const char *s),
 	    TP_ARGS(s),
 	    TP_STRUCT__entry(
@@ -158,7 +158,7 @@ TRACE_EVENT(cpufreq_interactive_boost,
 	    TP_printk("%s", __get_str(s))
 );
 
-TRACE_EVENT(cpufreq_interactive_unboost,
+TRACE_EVENT(cpufreq_simplgov_unboost,
 	    TP_PROTO(const char *s),
 	    TP_ARGS(s),
 	    TP_STRUCT__entry(
@@ -170,7 +170,7 @@ TRACE_EVENT(cpufreq_interactive_unboost,
 	    TP_printk("%s", __get_str(s))
 );
 
-#endif /* _TRACE_CPUFREQ_INTERACTIVE_H */
+#endif /* _TRACE_CPUFREQ_simplgov_H */
 
 /* This part must be outside protection */
 #include <trace/define_trace.h>
