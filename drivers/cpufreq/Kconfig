@@ -70,6 +70,10 @@ config CPU_FREQ_DEFAULT_GOV_POWERSAVE
 	  the frequency statically to the lowest frequency supported by
 	  the CPU.
 
+
+config CPU_FREQ_DEFAULT_GOV_SIMPLGOV
+	bool "simplgov"
+	
 config CPU_FREQ_DEFAULT_GOV_USERSPACE
 	bool "userspace"
 	select CPU_FREQ_GOV_USERSPACE
@@ -195,6 +199,9 @@ config CPU_FREQ_GOV_INTERACTIVE
 	  
 config CPU_FREQ_GOV_INTELLIACTIVE
 	tristate "'intelliactive' cpufreq policy governor"
+
+config CPU_FREQ_GOV_SIMPLGOV
+	tristate "'simplgov' cpufreq policy governor"
 	
 config CPU_FREQ_GOV_BLUACTIVE
 	tristate "'bluactive' cpufreq policy governor"
