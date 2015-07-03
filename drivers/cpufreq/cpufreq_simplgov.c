@@ -96,6 +96,8 @@ static unsigned int default_target_loads[] = {DEFAULT_TARGET_LOAD};
 
 #define SIMPL_TIMER (10 * USEC_PER_MSEC)
 
+#define SUPER_TIMER (1000 * USEC_PER_MSEC)
+
 #define DEFAULT_ABOVE_HISPEED_DELAY DEFAULT_TIMER_RATE
 static unsigned int default_above_hispeed_delay[] = {
 	DEFAULT_ABOVE_HISPEED_DELAY };
@@ -148,7 +150,12 @@ struct cpufreq_simplgov_tunables {
 	/* Hi speed to bump to from lo speed when load burst (default max) */
 	unsigned int hispeed_freq;
 	/* Go to hi speed when CPU load at or above this value. */
+
+#ifdef CONFIG_SAFE_SWITCH
 #define DEFAULT_GO_HISPEED_LOAD 99
+#else
+#define DEFAULT_GO_HISPEED_LOAD 100
+#endif
 	unsigned long go_hispeed_load;
 	/* Target load. Lower values result in higher CPU speeds. */
 	spinlock_t target_loads_lock;
@@ -158,7 +165,12 @@ struct cpufreq_simplgov_tunables {
 	 * The minimum amount of time to spend at a frequency before we can ramp
 	 * down.
 	 */
+
+#ifdef CONFIG_SAFE_SWITCH
 #define DEFAULT_MIN_SAMPLE_TIME (80 * USEC_PER_MSEC)
+#else
+#define DEFAULT_MIN_SAMPLE_TIME (200 * USEC_PER_MSEC)
+#endif
 	unsigned long min_sample_time;
 	/*
 	 * The sample rate of the timer used to increase frequency
@@ -409,12 +421,16 @@ static unsigned int choose_freq(struct cpufreq_simplgov_cpuinfo *pcpu,
 	unsigned int prevfreq, freqmin, freqmax;
 	unsigned int tl;
 	unsigned int syncfreq;
+	unsigned int supertimer;
 	int index;
 
 	freqmin = 0;
 	freqmax = UINT_MAX;
 	simpltimer = SIMPL_TIMER;
 	syncfreq = SYNCFREQ;
+	supertimer = SUPER_TIMER;
+
+
 
 	do {
 		prevfreq = freq;
@@ -436,11 +452,23 @@ static unsigned int choose_freq(struct cpufreq_simplgov_cpuinfo *pcpu,
 			freqmin = prevfreq;
 
 
-		if (freq = syncfreq) {
+		if (freq == syncfreq) {
 
 			simpltimer;
+			#ifndef CONFIG_SAFE_SWITCH 
+			supertimer;
+			#endif
 
 			}
+
+			#ifndef CONFIG_SAFE_SWITCH
+			if (freq == freqmax) {
+				/* Lets go to the minimal freq instead. */
+			freq = freqmin;
+			supertimer;
+			break;
+			}
+			#endif
 
 			if (freq >= freqmax) {
 				/*
@@ -462,6 +490,11 @@ static unsigned int choose_freq(struct cpufreq_simplgov_cpuinfo *pcpu,
 					 * we found that is fast enough.
 					 */
 					freq = freqmax;
+
+					#ifndef CONFIG_SAFE_SWITCH 
+					freq = freqmin;
+					supertimer;
+					#endif
 
 					simpltimer;
 					break;
@@ -497,6 +530,7 @@ static unsigned int choose_freq(struct cpufreq_simplgov_cpuinfo *pcpu,
 	} while (freq != prevfreq);
 
 	return freq;
+
 }
 
 static u64 update_load(int cpu)
@@ -1975,6 +2009,7 @@ __ATTR(_name, 0660, show_##_name##_gov_pol, store_##_name##_gov_pol)
 	gov_sys_attr_rw(_name);						\
 	gov_pol_attr_rw(_name)
 
+
 gov_sys_pol_attr_rw(target_loads);
 gov_sys_pol_attr_rw(above_hispeed_delay);
 gov_sys_pol_attr_rw(hispeed_freq);
@@ -2000,6 +2035,7 @@ gov_sys_pol_attr_rw(single_exit_time);
 gov_sys_pol_attr_rw(single_cluster0_min_freq);
 gov_sys_pol_attr_rw(multi_cluster0_min_freq);
 #endif
+
 
 static struct global_attr boostpulse_gov_sys =
 	__ATTR(boostpulse, 0200, NULL, store_boostpulse_gov_sys);
@@ -2247,7 +2283,12 @@ static void cpufreq_param_set_init(struct cpufreq_simplgov_tunables *tunables)
 {
 	unsigned int i;
 
-	tunables->multi_enter_load = DEFAULT_TARGET_LOAD * num_possible_cpus() / 2;
+	
+	/* Default is / 2. Artificially increasing the targetload */
+	tunables->multi_enter_load = DEFAULT_TARGET_LOAD * num_possible_cpus();
+	#ifndef CONFIG_SAFE_SWITCH 
+	tunables->multi_enter_load = DEFAULT_TARGET_LOAD * 40;
+	#endif
 
 	for (i = 0; i < MAX_PARAM_SET; i++) {
 		tunables->hispeed_freq_set[i] = 0;
