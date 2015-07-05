@@ -3240,11 +3240,11 @@ static struct fsg_common *fsg_common_init(struct fsg_common *common,
 	common->luns = curlun;
 
 	init_rwsem(&common->filesem);
-<<<<<<< HEAD
+
 	rc = create_lun_device(common, cdev, cfg, 0);
 	if (rc != 0)
 		goto error;
-=======
+
 
 	for (i = 0, lcfg = cfg->luns; i < nluns; ++i, ++curlun, ++lcfg) {
 		curlun->cdrom = !!lcfg->cdrom;
@@ -3299,7 +3299,7 @@ static struct fsg_common *fsg_common_init(struct fsg_common *common,
 		}
 	}
 	common->nluns = nluns;
->>>>>>> 46bd477... usb: gadget: mass_storage: added sysfs entry for cdrom to LUNs
+
 
 	/* Data buffers cyclic list */
 	bh = common->buffhds;
@@ -3413,13 +3413,11 @@ static void fsg_common_release(struct kref *ref)
 
 		/* In error recovery common->nluns may be zero. */
 		for (; i; --i, ++lun) {
-<<<<<<< HEAD
-=======
+
 #ifdef CONFIG_USB_MSC_PROFILING
 			device_remove_file(&lun->dev, &dev_attr_perf);
 #endif
 			device_remove_file(&lun->dev, &dev_attr_cdrom);
->>>>>>> 46bd477... usb: gadget: mass_storage: added sysfs entry for cdrom to LUNs
 			device_remove_file(&lun->dev, &dev_attr_nofua);
 			device_remove_file(&lun->dev,
 					   lun->cdrom
